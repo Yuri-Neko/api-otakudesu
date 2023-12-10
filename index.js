@@ -1,6 +1,8 @@
 const app = require("express")();
 const helper = require("./helper");
 const port = process.env.PORT || 5000;
+const axios = require("axios");
+
 
 app.get("/", (req, res) =>
   res.json({
@@ -17,6 +19,15 @@ app.get("/api/otakudesu/genres/:id/:page", helper.genre);
 app.get("/api/otakudesu/complete/:page", helper.complete);
 app.get("/api/otakudesu/schedule", helper.schedule);
 app.get("/api/otakudesu/thumb/:id", helper.thumb);
+app.get('/fetch', async (req, res) => {
+	try {
+		if (!req.query.url) return res.json({ message: 'Required an url' })
+		let json = await axios.get(req.query.url)
+		res.json(json.data)
+	} catch (e) {
+		res.send(e)
+	}
+})
 
 app.use("*", (req, res) => {
   var data = {
